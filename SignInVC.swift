@@ -13,6 +13,8 @@ import Firebase
 
 class SignInVC: UIViewController {
 
+    @IBOutlet weak var emailField: FancyField!
+    @IBOutlet weak var pswField: FancyField!
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
@@ -47,6 +49,28 @@ class SignInVC: UIViewController {
             }
         
         })
+    }
+    @IBAction func signInTapped(_ sender: Any) {
+        
+        if let email = emailField.text, let pwd = pswField.text {
+            FIRAuth.auth()?.signIn(withEmail: email, password: pwd, completion: {(user,error) in
+                
+                if error == nil{
+                
+                    print("Firebase email kullanıcısı doğrulandı")
+                } else{
+                    FIRAuth.auth()?.createUser(withEmail: email, password: pwd, completion: {(user,error) in
+                        
+                        if error != nil{
+                            print("Firebase kullanıcı email doğrulanamadı")
+                        }else{
+                            print("Firebase kullanıcı mail doğrulandı")
+                        }
+                    
+                    })
+                }
+            })
+        }
     }
 
 }
